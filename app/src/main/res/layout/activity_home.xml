@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_gradient"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    tools:context=".ActivityHome">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/colorPencil"
+        app:tabIndicatorGravity="top"
+        app:tabIndicatorHeight="5dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/gray_home_icon" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_findtutor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/gray_find_icon" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_requests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/gray_requests_icon" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/gray_logout_icon" />
+    </com.google.android.material.tabs.TabLayout>
+</LinearLayout>

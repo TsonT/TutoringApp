@@ -1,0 +1,56 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowFullscreen">false</item>
+        <item name="colorPrimary">#312F2F</item>
+        <item name="colorPrimaryDark">#312F2F</item>
+        <item name="colorAccent">#312F2F</item>
+        <item name="android:navigationBarColor">#312F2F</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:fontFamily">@font/baloo</item>
+        <item name="android:buttonStyle">@style/ButtonBackground</item>
+        <item name="android:windowAnimationStyle">@style/AnimationInAndOut.Activity</item>
+    </style>
+
+    <style name="ButtonBackground" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/rounded_button</item>
+    </style>
+
+    <style name="checkBoxStyle" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">@color/ic_launcher_background</item>
+        <item name="android:textColorSecondary">#9A424040</item>
+    </style>
+
+    <style name="radioButtonStyle" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">@color/ic_launcher_background</item>
+        <item name="android:textColorSecondary">#9A424040</item>
+    </style>
+
+    <style name="filterWindow" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+    <style name="AnimationInAndOut.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">18dp</item>
+    </style>
+
+
+</resources>

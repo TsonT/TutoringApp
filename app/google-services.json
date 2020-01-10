@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "898457484727",
+    "firebase_url": "https://tutoringapp-5020d.firebaseio.com",
+    "project_id": "tutoringapp-5020d",
+    "storage_bucket": "tutoringapp-5020d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898457484727:android:67962ac94006e94a1f3c32",
+        "android_client_info": {
+          "package_name": "com.example.tutoringapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898457484727-c704qjlll9ikf8s4qlu6qbik0cb3m8p3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tutoringapp",
+            "certificate_hash": "5b03ca27dd1b3a42c84c9c4eb1cac938b8258c11"
+          }
+        },
+        {
+          "client_id": "898457484727-aeh33nj1jcfjnqqev5q5clcaij46pocd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChgYDN6WQm4ge2d0c3VxigNDLHg12DWXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898457484727-aeh33nj1jcfjnqqev5q5clcaij46pocd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_gradient"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".FragmentHome">
+
+
+    <ImageView
+        android:id="@+id/img_ProfilePic"
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/gray_profile_icon" />
+
+    <TextView
+        android:id="@+id/text_Welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Welcome Back Name!"
+        android:textColor="@android:color/white"
+        android:textSize="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/text_Month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="January, 2020"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_calendar_top"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textColor="#fff"
+        android:paddingLeft="20dp"
+        android:textSize="20dp"/>
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="visible"
+        app:compactCalendarOtherMonthDaysTextColor="#60505050"
+        app:compactCalendarBackgroundColor="#3B4B4A4A"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#03A9F4"
+        app:compactCalendarDisplayOtherMonthDays="true"
+        app:compactCalendarEventIndicatorStyle="small_indicator"
+        app:compactCalendarMultiEventIndicatorColor="#fff"
+        app:compactCalendarTargetHeight="250dp"
+        app:compactCalendarTextColor="#fff"
+
+        app:compactCalendarTextSize="15dp" />
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text=""
+        android:background="@drawable/rounded_calendar_bottom"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textColor="#fff"
+        android:paddingLeft="20dp"
+        android:textSize="20dp"/>
+</LinearLayout>
