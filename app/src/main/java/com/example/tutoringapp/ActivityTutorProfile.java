@@ -37,8 +37,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class ActivityTutorProfile extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
@@ -232,8 +235,19 @@ public class ActivityTutorProfile extends AppCompatActivity implements TimePicke
                         final Dialog dialog1 = new loadingDialog().create(ActivityTutorProfile.this, "Sending...");
                         dialog1.show();
 
+                        String strDate, strTime;
+                        String strDateTime;
+
+                        SimpleDateFormat sdfDay = new SimpleDateFormat("MM/dd/YYYY", Locale.getDefault());
+                        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+                        strDate = sdfDay.format(new Date());
+                        strTime = sdfTime.format(new Date());
+
+                        strDateTime = strDate + " : " + strTime;
+
                         token = mRequests.push().getKey();
-                        final ObjectRequest objectRequest = new ObjectRequest(Uid, tutorProfile.getUid(), token, field_Comment.getText().toString(), strRequestDate, null, time, location, requester.getName(), tutorProfile.getName());
+                        final ObjectRequest objectRequest = new ObjectRequest(Uid, tutorProfile.getUid(), token, field_Comment.getText().toString(), strRequestDate, null, time, location, requester.getName(), tutorProfile.getName(), strDateTime);
 
                         mRequests.child(token).setValue(objectRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

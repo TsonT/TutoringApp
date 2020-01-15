@@ -13,9 +13,12 @@
         android:roundIcon="@mipmap/pencil_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ActivityRequestChat"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".ActivityHome"></activity>
         <activity
             android:name=".ActivityLeaveReview"
-            android:parentActivityName=".ActivityRequests"></activity>
+            android:parentActivityName=".ActivityRequests" />
         <activity
             android:name=".ActivityStudentProfile"
             android:parentActivityName=".ActivityRequests" />
@@ -39,7 +42,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ActivitySetProfile"
-            android:parentActivityName=".ActivityRegister" />
+            android:parentActivityName=".ActivityRegister"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

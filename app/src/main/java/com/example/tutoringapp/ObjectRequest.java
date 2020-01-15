@@ -3,12 +3,12 @@ package com.example.tutoringapp;
 import java.io.Serializable;
 
 public class ObjectRequest implements Serializable {
-     String RequesterUid, Key, RecipientUid, Message, Date, Time, Location, RequesterName, RecipientName;
+     String RequesterUid, Key, RecipientUid, Message, Date, Time, Location, RequesterName, RecipientName, sentDateTime;
      Boolean isAccepted;
      Boolean  isCancelled = false;
      Boolean isFinished = false;
 
-    public ObjectRequest(String requesterUid, String recipientUid, String key, String message, String date, Boolean isAccepted, String time, String location, String requesterName, String recipientName) {
+    public ObjectRequest(String requesterUid, String recipientUid, String key, String message, String date, Boolean isAccepted, String time, String location, String requesterName, String recipientName, String sentDateTime) {
         RequesterUid = requesterUid;
         Key = key;
         RecipientUid = recipientUid;
@@ -19,6 +19,7 @@ public class ObjectRequest implements Serializable {
         Location = location;
         RequesterName = requesterName;
         RecipientName = recipientName;
+        this.sentDateTime = sentDateTime;
     }
 
     public ObjectRequest() {
@@ -118,5 +119,13 @@ public class ObjectRequest implements Serializable {
 
     public void setRecipientName(String recipientName) {
         RecipientName = recipientName;
+    }
+
+    public String getSentDateTime() {
+        return sentDateTime;
+    }
+
+    public void setSentDateTime(String sentDateTime) {
+        this.sentDateTime = sentDateTime;
     }
 }

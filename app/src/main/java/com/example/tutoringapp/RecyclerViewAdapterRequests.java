@@ -32,6 +32,7 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
     private Context mContext ;
     String strRecipientName;
     String strRequesterName;
+    String strDateTime;
     String strStatus, strRequestName = "";
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private ArrayList<ObjectRequest> mData;
@@ -64,10 +65,18 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
         mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-               strRequesterName = dataSnapshot.child(request.RequesterUid).child("name").getValue().toString();
-               strRecipientName = dataSnapshot.child(request.RecipientUid).child("name").getValue().toString();
+                try {
+                    strRequesterName = dataSnapshot.child(request.RequesterUid).child("name").getValue().toString();
+                    strRecipientName = dataSnapshot.child(request.RecipientUid).child("name").getValue().toString();
+                }
+                catch (Exception e)
+                {
 
-               viewHolder.itemView.setOnClickListener(null);
+                }
+
+               holder.itemView.setOnClickListener(null);
+
+                strDateTime = request.getSentDateTime();
 
                if (request.isCancelled)
                 {
@@ -80,7 +89,7 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                    {
                        strStatus = "Waiting For Response...";
                        strRequestName = "Requested Tutor: " + strRecipientName;
-                       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                       holder.itemView.setOnClickListener(new View.OnClickListener() {
                            @Override
                            public void onClick(View v) {
                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -96,7 +105,7 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
 
                                                dialog.dismiss();
                                                Intent intent = new Intent(mContext, ActivityHome.class);
-                                               viewHolder.itemView.getContext().startActivity(intent);
+                                               holder.itemView.getContext().startActivity(intent);
                                                break;
 
                                            case DialogInterface.BUTTON_NEGATIVE:
@@ -105,9 +114,15 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                                        }
                                    }
                                };
-                               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                               builder.setMessage("Would You Like To Cancel This Request?").setPositiveButton("Yes", dialogClickListener)
-                                       .setNegativeButton("No", dialogClickListener).show();
+                               //AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                               //builder.setMessage("Would You Like To Cancel This Request?").setPositiveButton("Yes", dialogClickListener)
+                                       //.setNegativeButton("No", dialogClickListener).show();
+
+                               Intent intent = new Intent(mContext, ActivityRequestChat.class);
+                               intent.putExtra("Name", strRequesterName);
+                               intent.putExtra("Request", mData.get(position));
+                               intent.putExtra("Image", dataSnapshot.child(request.RequesterUid).child("urlPic").getValue().toString());
+                               holder.itemView.getContext().startActivity(intent);
                            }
                        });
                    }
@@ -115,28 +130,27 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                    {
                        strStatus = "Someone Sent You A Request!";
                        strRequestName = "Requested By: " + strRequesterName;
-                       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                       holder.itemView.setOnClickListener(new View.OnClickListener() {
                            @Override
                            public void onClick(View v) {
-                               Intent intent = new Intent(mContext, ActivityStudentProfile.class);
+                               Intent intent = new Intent(mContext, ActivityRequestChat.class);
                                intent.putExtra("Name", strRequesterName);
                                intent.putExtra("Request", mData.get(position));
                                intent.putExtra("Image", dataSnapshot.child(request.RequesterUid).child("urlPic").getValue().toString());
-                               viewHolder.itemView.getContext().startActivity(intent);
+                               holder.itemView.getContext().startActivity(intent);
                            }
                        });
                    }
                    else if(request.isAccepted)
                    {
-                       String strDate;
-                       Date date = null;
+                       Date date;
                        date = convertToDate(request.getDate());
                        if (new Date().after(date))
                        {
                            request.setFinished(true);
                            strStatus = "This Request Has Been Finished!";
                            strRequestName = "Leave A Review";
-                           viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                           holder.itemView.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View v) {
                                    Intent intent = new Intent(mContext, ActivityLeaveReview.class);
@@ -156,7 +170,7 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                                        intent.putExtra("isReviewForTutor", true);
                                        intent.putExtra("ObjectRequest", request);
                                    }
-                                   viewHolder.itemView.getContext().startActivity(intent);
+                                   holder.itemView.getContext().startActivity(intent);
                                }
                            });
                        }
@@ -164,14 +178,14 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                        {
                            strStatus = "Request Accepted!";
                            strRequestName = "Requested Tutor: " + strRecipientName;
-                           viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                           holder.itemView.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View v) {
-                                   Intent intent = new Intent(mContext, ActivityStudentProfile.class);
+                                   Intent intent = new Intent(mContext, ActivityRequestChat.class);
                                    intent.putExtra("Name", strRecipientName);
                                    intent.putExtra("Request", mData.get(position));
                                    intent.putExtra("Image", dataSnapshot.child(request.RecipientUid).child("urlPic").getValue().toString());
-                                   viewHolder.itemView.getContext().startActivity(intent);
+                                   holder.itemView.getContext().startActivity(intent);
                                }
                            });
                        }
@@ -179,14 +193,14 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                        {
                            strStatus = "You Accepted This Request!";
                            strRequestName = "Requested By: " + strRequesterName;
-                           viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                           holder.itemView.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View v) {
-                                   Intent intent = new Intent(mContext, ActivityStudentProfile.class);
+                                   Intent intent = new Intent(mContext, ActivityRequestChat.class);
                                    intent.putExtra("Name", strRequesterName);
                                    intent.putExtra("Request", mData.get(position));
                                    intent.putExtra("Image", dataSnapshot.child(request.RequesterUid).child("urlPic").getValue().toString());
-                                   viewHolder.itemView.getContext().startActivity(intent);
+                                   holder.itemView.getContext().startActivity(intent);
                                }
                            });
                        }
@@ -209,6 +223,7 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
                }
                 holder.textView.setText(strStatus);
                 holder.textView2.setText(strRequestName);
+                holder.text_DateTime.setText("Sent At: " + strDateTime);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -224,12 +239,13 @@ public class RecyclerViewAdapterRequests extends RecyclerView.Adapter<RecyclerVi
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textView, textView2;
+        TextView textView, textView2, text_DateTime;
 
         public MyViewHolder(final View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textView);
             textView2 = itemView.findViewById(R.id.textView2);
+            text_DateTime = itemView.findViewById(R.id.text_DateTime);
         }
     }
 

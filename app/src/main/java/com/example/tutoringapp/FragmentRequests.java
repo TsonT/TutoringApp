@@ -27,6 +27,7 @@ public class FragmentRequests extends Fragment {
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         setupViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(3);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);

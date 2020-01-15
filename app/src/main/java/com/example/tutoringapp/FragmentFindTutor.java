@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -217,6 +219,22 @@ public class FragmentFindTutor extends Fragment {
                 return false;
             }
         });
+        field_SearchName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                startSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         mTutorInfo = FirebaseDatabase.getInstance().getReference().child("TutorInfo");
         mTutorInfo.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -257,7 +275,7 @@ public class FragmentFindTutor extends Fragment {
             Log.e("test", "test");
             for (int i = 0; i < tutorProfileArrayList.size(); i++)
             {
-                if (tutorProfileArrayList.get(i).getName().toLowerCase().equals(filterName.toLowerCase()) ||filterName.equals("") )
+                if (tutorProfileArrayList.get(i).getName().toLowerCase().contains(filterName.toLowerCase()) ||filterName.equals("") )
                 {
                     if (Double.parseDouble(tutorProfileArrayList.get(i).getGPA()) >= minGPA || minGPA == -1.00)
                     {

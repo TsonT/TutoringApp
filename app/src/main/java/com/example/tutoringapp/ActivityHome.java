@@ -44,6 +44,7 @@ public class ActivityHome extends AppCompatActivity {
 
 
         viewPager = findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(4);
 
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);

@@ -116,7 +116,7 @@ public class FragmentHome extends Fragment {
 
                     if (dateClicked.compareTo(convertToDate(objectRequest.getDate())) == 0)
                     {
-                        final Intent intent = new Intent(getContext(), ActivityStudentProfile.class);
+                        final Intent intent = new Intent(getContext(), ActivityRequestChat.class);
                         intent.putExtra("Request", objectRequest);
                         DatabaseReference mImage = FirebaseDatabase.getInstance().getReference().child("TutorInfo").child(objectRequest.getRequesterUid()).child("urlPic");
                         mImage.addListenerForSingleValueEvent(new ValueEventListener() {

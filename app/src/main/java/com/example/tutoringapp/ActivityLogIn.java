@@ -73,7 +73,22 @@ public class ActivityLogIn extends AppCompatActivity {
         btn_LogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startLogIn(field_Email.getText().toString(), field_Password.getText().toString());
+                String email, password;
+                email = field_Email.getText().toString();
+                password = field_Password.getText().toString();
+
+                if (email.isEmpty())
+                {
+                    Toast.makeText(ActivityLogIn.this, "Email does not match an email in our database", Toast.LENGTH_SHORT).show();
+                }
+                else if (password.isEmpty())
+                {
+                    Toast.makeText(ActivityLogIn.this, "Password does not match an email in our database", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    startLogIn(email, password);
+                }
             }
         });
 

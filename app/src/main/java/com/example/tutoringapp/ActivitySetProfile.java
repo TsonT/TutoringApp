@@ -63,7 +63,7 @@ public class ActivitySetProfile extends AppCompatActivity {
     ArrayList<String> lstStrSchools = new ArrayList<>();
     Integer characterCount = 0;
     Gson gson;
-    Boolean isAvailable, isRegistering;
+    Boolean isAvailable = false, isRegistering = false;
     TutorProfile tutorProfile;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
