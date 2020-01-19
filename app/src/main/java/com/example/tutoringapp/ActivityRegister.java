@@ -3,7 +3,9 @@ package com.example.tutoringapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +14,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.storage.UploadTask;
 
 public class ActivityRegister extends AppCompatActivity {
 
@@ -67,10 +72,8 @@ public class ActivityRegister extends AppCompatActivity {
                                         }
                                         else
                                         {
-                                            Intent intent = new Intent (ActivityRegister.this, ActivitySetProfile.class);
-                                            intent.putExtra("Email", field_Email.getText().toString());
-                                            intent.putExtra("Password", field_Password.getText().toString());
-                                            intent.putExtra("isRegistering", true);
+                                            startRegistration(field_Email.getText().toString(), field_Password.getText().toString());
+                                            Intent intent = new Intent (ActivityRegister.this, ActivityLogIn.class);
                                             startActivity(intent);
                                         }
                                     }
@@ -85,5 +88,23 @@ public class ActivityRegister extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void startRegistration(final String email, String password)
+    {
+        final Dialog dialog = loadingDialog.create(this, "Loading...");
+        dialog.show();
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful())
+                        {
+                            dialog.dismiss();
+                            Toast.makeText(ActivityRegister.this, "An Email Has Been Sent To " + email + " Please Verify That This Is Yours!", Toast.LENGTH_SHORT).show();
+                            mAuth.getCurrentUser().sendEmailVerification();
+                        }
+                    }
+                });
     }
 }

@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -235,33 +236,54 @@ public class ActivityTutorProfile extends AppCompatActivity implements TimePicke
                         final Dialog dialog1 = new loadingDialog().create(ActivityTutorProfile.this, "Sending...");
                         dialog1.show();
 
-                        String strDate, strTime;
-                        String strDateTime;
+                        final String strDate, strTime;
+                        final String strDateTime;
 
-                        SimpleDateFormat sdfDay = new SimpleDateFormat("MM/dd/YYYY", Locale.getDefault());
+                        final SimpleDateFormat sdfDay = new SimpleDateFormat("MM/dd/YYYY", Locale.getDefault());
                         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
                         strDate = sdfDay.format(new Date());
                         strTime = sdfTime.format(new Date());
 
-                        strDateTime = strDate + " : " + strTime;
+                        strDateTime = strDate + " - " + strTime;
 
-                        token = mRequests.push().getKey();
-                        final ObjectRequest objectRequest = new ObjectRequest(Uid, tutorProfile.getUid(), token, field_Comment.getText().toString(), strRequestDate, null, time, location, requester.getName(), tutorProfile.getName(), strDateTime);
-
-                        mRequests.child(token).setValue(objectRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mRequests.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                                DatabaseReference mSent = FirebaseDatabase.getInstance().getReference().child("TutorInfo").child(Uid).child("SentRequests");
-                                mSent.child(token).setValue(objectRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        dialog1.dismiss();
-                                        Intent intent = new Intent(ActivityTutorProfile.this, ActivityHome.class);
-                                        startActivity(intent);
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                {
+                                    String pastDate = snapshot.child("date").getValue().toString();
+                                    if (pastDate.equals(strDate))
+                                    {
+                                        Toast.makeText(ActivityTutorProfile.this, "Sorry Your Tutor Is Already Booked That Day! Please Select A Different Day Or Tutor", Toast.LENGTH_SHORT).show();
                                     }
-                                });
+                                    else
+                                    {
+                                        token = mRequests.push().getKey();
+                                        final ObjectRequest objectRequest = new ObjectRequest(Uid, tutorProfile.getUid(), token, field_Comment.getText().toString(), strRequestDate, null, time, location, requester.getName(), tutorProfile.getName(), strDateTime);
+
+                                        mRequests.child(token).setValue(objectRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                DatabaseReference mSent = FirebaseDatabase.getInstance().getReference().child("TutorInfo").child(Uid).child("SentRequests");
+                                                mSent.child(token).setValue(objectRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        dialog1.dismiss();
+                                                        Toast.makeText(ActivityTutorProfile.this, "Request Successfully Sent!", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(ActivityTutorProfile.this, ActivityHome.class);
+                                                        startActivity(intent);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
                         });
                     }

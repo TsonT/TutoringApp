@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class FragmentSentRequests extends Fragment {
+public class FragmentSentRequests extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String Uid = mAuth.getCurrentUser().getUid();
@@ -32,6 +33,7 @@ public class FragmentSentRequests extends Fragment {
     ArrayList<ObjectRequest> lstSentRequests = new ArrayList<>();
     RecyclerView recyclerView;
     View view;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -40,6 +42,8 @@ public class FragmentSentRequests extends Fragment {
 
         final Dialog dialog = new loadingDialog().create(view.getContext(), "Loading...");
         recyclerView = view.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         dialog.show();
         mSent.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,9 +71,36 @@ public class FragmentSentRequests extends Fragment {
         });
 
 
-
-
-
         return view;
+    }
+
+    @Override
+    public void onRefresh() {
+
+        swipeRefreshLayout.setRefreshing(true);
+
+        mSent.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Log.e("string", "string");
+
+                lstSentRequests.clear();
+
+                for (DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+                    lstSentRequests.add(snapshot.getValue(ObjectRequest.class));
+                }
+                RecyclerViewAdapterRequests adapter = new RecyclerViewAdapterRequests(view.getContext(), lstSentRequests);
+                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                recyclerView.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

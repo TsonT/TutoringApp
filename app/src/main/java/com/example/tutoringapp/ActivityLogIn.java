@@ -112,28 +112,51 @@ public class ActivityLogIn extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
-                            Uid = mAuth.getCurrentUser().getUid();
-                            mDatabase = FirebaseDatabase.getInstance().getReference().child("TutorInfo").child(Uid);
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    TutorProfile tutorProfile = dataSnapshot.getValue(TutorProfile.class);
-                                    String json = gson.toJson(tutorProfile);
-                                    editor.putString("TutorProfile", json);
-                                    editor.commit();
+                            if (mAuth.getCurrentUser().isEmailVerified())
+                            {
+                                Uid = mAuth.getCurrentUser().getUid();
+                                mDatabase = FirebaseDatabase.getInstance().getReference().child("TutorInfo");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot: dataSnapshot.getChildren())
+                                        {
+                                            if (snapshot.getKey().equals(mAuth.getCurrentUser().getUid()))
+                                            {
+                                                TutorProfile tutorProfile = snapshot.getValue(TutorProfile.class);
+                                                String json = gson.toJson(tutorProfile);
+                                                editor.putString("TutorProfile", json);
+                                                editor.commit();
 
-                                    dialog.dismiss();
-                                    Toast.makeText(ActivityLogIn.this, "Log In Successful!", Toast.LENGTH_SHORT).show();
+                                                dialog.dismiss();
+                                                Toast.makeText(ActivityLogIn.this, "Log In Successful!", Toast.LENGTH_SHORT).show();
 
-                                    Intent intent = new Intent(ActivityLogIn.this, ActivityHome.class);
-                                    startActivity(intent);
-                                }
+                                                Intent intent = new Intent(ActivityLogIn.this, ActivityHome.class);
+                                                startActivity(intent);
+                                                finish();
+                                                return;
+                                            }
+                                        }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Intent intent = new Intent(ActivityLogIn.this, ActivitySetProfile.class);
+                                        intent.putExtra("isRegistering", true);
+                                        Toast.makeText(ActivityLogIn.this, "Time To Finish Setting Up Your Profile!", Toast.LENGTH_SHORT).show();
+                                        startActivity(intent);
 
-                                }
-                            });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                Toast.makeText(ActivityLogIn.this, "Please Verify Your Email First", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+
 
                         }
                         else

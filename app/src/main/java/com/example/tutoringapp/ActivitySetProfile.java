@@ -1,6 +1,7 @@
 package com.example.tutoringapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +41,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 public class ActivitySetProfile extends AppCompatActivity {
 
@@ -190,9 +194,7 @@ public class ActivitySetProfile extends AppCompatActivity {
                     Toast.makeText(ActivitySetProfile.this, "Please Enter A Valid GPA", Toast.LENGTH_SHORT).show();
                 }
                 else if (isRegistering) {
-                    String email = getIntent().getStringExtra("Email");
-                    String password = getIntent().getStringExtra("Password");
-                    startRegistration(email, password);
+                    startRegistration();
                 }
                 else
                 {
@@ -224,7 +226,14 @@ public class ActivitySetProfile extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Uri> task) {
                                     imgUrl = task.getResult().toString();
                                     TutorProfile tutorProfile = new TutorProfile(lstChkSchools, lstChkSubjects, Uid, field_Name.getText().toString(),field_GPA.getText().toString(),field_Bio.getText().toString(), mAuth.getCurrentUser().getEmail(), isAvailable, imgUrl);
-                                    mTutorInfo.child(Uid).setValue(tutorProfile);
+                                    mTutorInfo.child(Uid).child("lstSchools").setValue(lstChkSchools);
+                                    mTutorInfo.child(Uid).child("lstSubjects").setValue(lstChkSubjects);
+                                    mTutorInfo.child(Uid).child("name").setValue(field_Name.getText().toString());
+                                    mTutorInfo.child(Uid).child("gpa").setValue(field_GPA.getText().toString());
+                                    mTutorInfo.child(Uid).child("bio").setValue(field_Bio.getText().toString());
+                                    mTutorInfo.child(Uid).child("email").setValue(mAuth.getCurrentUser().getEmail());
+                                    mTutorInfo.child(Uid).child("available").setValue(isAvailable);
+                                    mTutorInfo.child(Uid).child("urlPic").setValue(imgUrl);
 
                                     String json = gson.toJson(tutorProfile);
                                     editor.putString("TutorProfile", json);
@@ -286,62 +295,54 @@ public class ActivitySetProfile extends AppCompatActivity {
         }
     }
 
-    public void startRegistration(String email, String password)
+    public void startRegistration()
     {
         final Dialog dialog = loadingDialog.create(this, "Loading...");
         dialog.show();
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful())
-                            {
-                                Uid = mAuth.getCurrentUser().getUid();
-                                Toast.makeText(ActivitySetProfile.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                for (int i = 0; i < lstSubjects.size(); i++)
-                                {
-                                    if (lstSubjects.get(i).isChecked())
-                                    {
-                                        lstChkSubjects.add(lstSubjects.get(i).getName());
+        Uid = mAuth.getCurrentUser().getUid();
+        for (int i = 0; i < lstSubjects.size(); i++)
+        {
+            if (lstSubjects.get(i).isChecked())
+            {
+                lstChkSubjects.add(lstSubjects.get(i).getName());
+            }
+        }
+        for (int i = 0; i < lstSchools.size(); i++)
+        {
+            if (lstSchools.get(i).isChecked())
+            {
+                lstChkSchools.add(lstStrSchools.get(i));
+            }
+        }
+
+        mStorage.child(Uid).putFile(uriProfilePic)
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        mStorage.child(Uid).getDownloadUrl()
+                                .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        imgUrl = task.getResult().toString();
+                                        TutorProfile tutorProfile = new TutorProfile(lstChkSchools, lstChkSubjects, Uid, field_Name.getText().toString(),field_GPA.getText().toString(),field_Bio.getText().toString(), mAuth.getCurrentUser().getEmail(), isAvailable, imgUrl);
+                                        mTutorInfo.child(Uid).setValue(tutorProfile);
+                                        mStorage.child(Uid).putFile(uriProfilePic);
+
+                                        String json = gson.toJson(tutorProfile);
+                                        editor.putString("TutorProfile", json);
+                                        editor.commit();
+
+                                        dialog.dismiss();
+
+                                        Intent intent = new Intent(ActivitySetProfile.this, ActivityHome.class);
+                                        startActivity(intent);
                                     }
-                                }
-                                for (int i = 0; i < lstSchools.size(); i++)
-                                {
-                                    if (lstSchools.get(i).isChecked())
-                                    {
-                                        lstChkSchools.add(lstStrSchools.get(i));
-                                    }
-                                }
+                                });
+                    }
+                });
 
-                                mStorage.child(Uid).putFile(uriProfilePic)
-                                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                                mStorage.child(Uid).getDownloadUrl()
-                                                        .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Uri> task) {
-                                                                imgUrl = task.getResult().toString();
-                                                                TutorProfile tutorProfile = new TutorProfile(lstChkSchools, lstChkSubjects, Uid, field_Name.getText().toString(),field_GPA.getText().toString(),field_Bio.getText().toString(), mAuth.getCurrentUser().getEmail(), isAvailable, imgUrl);
-                                                                mTutorInfo.child(Uid).setValue(tutorProfile);
-                                                                mStorage.child(Uid).putFile(uriProfilePic);
 
-                                                                dialog.dismiss();
 
-                                                                Toast.makeText(ActivitySetProfile.this, "Your Profile Has Been Set Up! Please Sign In Again", Toast.LENGTH_SHORT).show();
-                                                                Intent intent = new Intent(ActivitySetProfile.this, ActivityLogIn.class);
-                                                                startActivity(intent);
-                                                            }
-                                                        });
-                                            }
-                                        });
-                            }
-                            else
-                            {
-                                Toast.makeText(ActivitySetProfile.this, "Registration Failed:" + task.getException(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
     }
     public void createProfileUI()
     {

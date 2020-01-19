@@ -170,7 +170,6 @@ public class ActivityFindTutor extends AppCompatActivity {
                             lstSchools.add(new ObjectChk(lstStrSchools.get(i), false));
                         }
 
-                        Log.e("test", "test");
                         if (lstChkSchools.size() > 0)
                         {
                             for (String i: lstChkSchools)
